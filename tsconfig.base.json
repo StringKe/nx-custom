@@ -1,20 +1,38 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
     "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "sourceMap": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "build",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
+    "types": [
+      "node",
+      "jest"
+    ],
+    "lib": [
+      "es2019"
+    ],
+    "declaration": true,
+    "resolveJsonModule": true,
     "baseUrl": ".",
-    "paths": {}
+    "rootDir": ".",
+    "allowJs": true,
+    "paths": {
+      "@nx-custom/rollup": [
+        "libs/rollup/src/index.ts"
+      ],
+      "@nx-custom/test": [
+        "libs/test/src/index.ts"
+      ]
+    }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

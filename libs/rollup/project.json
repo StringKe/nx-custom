@@ -1,0 +1,53 @@
+{
+  "name": "rollup",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/rollup/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/rollup",
+        "main": "libs/rollup/src/index.ts",
+        "tsConfig": "libs/rollup/tsconfig.lib.json",
+        "assets": [
+          "libs/rollup/*.md",
+          {
+            "input": "./libs/rollup/src",
+            "glob": "**/!(*.ts)",
+            "output": "./src"
+          },
+          {
+            "input": "./libs/rollup/src",
+            "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./libs/rollup",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./libs/rollup",
+            "glob": "executors.json",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/rollup/**/*.ts",
+          "libs/rollup/generators.json",
+          "libs/rollup/executors.json",
+          "libs/rollup/package.json"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
