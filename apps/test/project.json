@@ -12,9 +12,13 @@
       "options": {
         "project": "apps/test/package.json",
         "outputPath": "dist/apps/test",
-        "main": "apps/test/src/index.ts",
+        "main": "**/*.ts",
+        "exportDirs": true,
         "tsConfig": "apps/test/tsconfig.lib.json",
-        "format": ["esm", "cjs"],
+        "format": [
+          "esm",
+          "cjs"
+        ],
         "deleteOutputPath": true,
         "generateExportsField": true,
         "updateBuildableProjectDepsInPackageJson": true,

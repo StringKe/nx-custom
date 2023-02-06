@@ -20,47 +20,44 @@ export function updatePackageJson(
     const hasEsmFormat = options.format.includes('esm')
     const hasCjsFormat = options.format.includes('cjs')
 
-    const types = `./${relative(options.projectRoot, options.main).replace(
-        /\.[jt]sx?$/,
-        '.d.ts',
-    )}`
-    const exports = {
-        // TS 4.5+
-        '.': {
-            types,
-        },
-    }
-
-    if (hasEsmFormat) {
-        // `module` field is used by bundlers like rollup and webpack to detect ESM.
-        // May not be required in the future if type is already "module".
-        packageJson.module = './index.js'
-        exports['.']['import'] = './index.js'
-
-        if (!hasCjsFormat) {
-            packageJson.main = './index.js'
-        }
-    }
-
-    if (hasCjsFormat) {
-        packageJson.main = './index.cjs'
-        exports['.']['require'] = './index.cjs'
-    }
+    const exports = {}
 
     packageJson.type = options.format.includes('esm') ? 'module' : 'commonjs'
 
-    // Support for older TS versions < 4.5
-    packageJson.types = types
+    // packageJson.types = types
+
+    let indexType = {
+        types: './src/index.d.ts',
+        import: './src/index.js',
+        require: './src/index.cjs',
+    }
 
     Object.keys(inputs).forEach((input) => {
         const value = input
         const relativePath = value.replace('src/', '')
         exports[relativePath] = {
             types: `./${value}.d.ts`,
-            import: `./${value}.js`,
-            require: `./${value}.cjs`,
+        }
+        if (hasEsmFormat) {
+            exports[relativePath].import = `./${value}.js`
+        }
+        if (hasCjsFormat) {
+            exports[relativePath].require = `./${value}.cjs`
+        }
+        if (relativePath === 'index') {
+            indexType = exports[relativePath]
         }
     })
+    packageJson.types = indexType.types
+    if (hasEsmFormat) {
+        packageJson.module = indexType.import
+    }
+    if (hasCjsFormat) {
+        packageJson.main = indexType.require
+    }
+    exports['.'] = indexType
+
+    // sort exports
 
     // TODO(jack): remove this for Nx 16
     if (
@@ -72,6 +69,13 @@ export function updatePackageJson(
             ...exports,
         }
     }
+
+    packageJson.exports = Object.keys(packageJson.exports)
+        .sort()
+        .reduce((acc, key) => {
+            acc[key] = packageJson.exports[key]
+            return acc
+        }, {})
 
     writeJsonFile(`${options.outputPath}/package.json`, packageJson)
 

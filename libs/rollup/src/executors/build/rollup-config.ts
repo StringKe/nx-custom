@@ -55,7 +55,7 @@ export function createRollupOptions(
         options.format = readCompatibleFormats(config)
     }
 
-    let inputs: Record<string, any> = {}
+    let inputs: Record<string, any>
 
     const rollupConfigs = options.format.map((format) => {
         const plugins = [
@@ -162,24 +162,37 @@ export function createRollupOptions(
             rollupConfig,
         )
 
-        const basePath = combineConfig.input.replace('/src/index.ts', '')
+        const workspaceDir = path.resolve(context.root, sourceRoot)
 
-        const files = glob.sync('src/**/*.ts', {
-            cwd: basePath,
-            root: path.resolve(basePath, '/'),
+        const main = context.target.options.main
+            .replace(context.root, '')
+            .replace(sourceRoot, '')
+
+        const files = glob.sync(main, {
+            cwd: workspaceDir,
         })
 
-        inputs = files.reduce((result, input) => {
-            const key = input.replace('.ts', '')
-            result[key] = path.join(basePath, input)
-            return result
-        }, {})
+        inputs = Object.assign(
+            {},
+            files.reduce((result, input) => {
+                let key = input.replace('.ts', '')
+                if (key.startsWith('./')) {
+                    key = key.replace('./', '')
+                }
+                result[`src/${key}`] = path.join(workspaceDir, input)
+                return result
+            }, {}),
+        )
+
+        console.log(inputs)
+
+        combineConfig.input = inputs
 
         return combineConfig
     })
 
     return {
-        inputs,
+        inputs: inputs,
         rollupConfigs,
     }
 }

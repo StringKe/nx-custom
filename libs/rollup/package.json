@@ -3,5 +3,31 @@
   "version": "0.0.1",
   "main": "src/index.js",
   "generators": "./generators.json",
-  "executors": "./executors.json"
+  "executors": "./executors.json",
+  "dependencies": {
+    "@nrwl/devkit": "^15.6.3",
+    "@nrwl/js": "^15.6.3",
+    "@nrwl/workspace": "^15.6.3",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-image": "^3.0.2",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "autoprefixer": "^10.4.13",
+    "babel-plugin-transform-async-to-promises": "^0.8.18",
+    "chalk": "^4.1.0",
+    "dotenv": "~10.0.0",
+    "fs-extra": "^11.1.0",
+    "postcss": "^8.4.14",
+    "rollup": "^3.14.0",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "rxjs": "^7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
